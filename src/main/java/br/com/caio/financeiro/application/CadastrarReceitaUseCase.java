@@ -5,7 +5,8 @@ import java.time.LocalDate;
 
 import org.springframework.stereotype.Service;
 
-import br.com.caio.financeiro.application.port.out.CadastrarReceitaPort;
+import br.com.caio.financeiro.application.port.CadastrarReceitaPort;
+import br.com.caio.financeiro.domain.Receita;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
 
@@ -13,13 +14,17 @@ import lombok.Value;
 @RequiredArgsConstructor
 public class CadastrarReceitaUseCase {
 	
-	private final CadastrarReceitaPort cadastrarReceitaPort = null; 
+	private final CadastrarReceitaPort cadastrarReceitaPort; 
 	
 	
 	
 	public OutputValues execute(InputValues input) {
 		
-		return null;
+		Receita receita = input.of(input.getDescricao(), input.getValor(), input.getData());
+		cadastrarReceitaPort.save(receita); 
+		
+		
+		return new OutputValues();
 		
 	}
 	
@@ -28,10 +33,16 @@ public class CadastrarReceitaUseCase {
 	@Value
     public static class InputValues {
 
-	Long id;
 	String descricao;
 	BigDecimal valor;
 	LocalDate data;
+	
+	public static Receita of(String descricao, BigDecimal valor, LocalDate data) {
+		
+		Receita receita = new Receita(descricao, valor, data); 
+		
+		return receita;
+	}
 
     }
 	
